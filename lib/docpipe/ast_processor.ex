@@ -21,16 +21,18 @@ defmodule Docpipe.ASTProcessor do
       node,
       acc
       |> link(node)
-      |> link(node)
+      |> image(node)
     }
   end
 
   def link(state, %Panpipe.AST.Link{} = link) do
+    IO.inspect(link)
     Map.put(state, :links, [link | state.links])
   end
   def link(state, _), do: state
 
   def image(state, %Panpipe.AST.Image{} = image) do
+    IO.inspect(image)
     Map.put(state, :images, [image | state.images])
   end
   def image(state, _), do: state
