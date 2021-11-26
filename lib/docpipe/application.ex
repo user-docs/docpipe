@@ -6,7 +6,11 @@ defmodule Docpipe.Application do
   use Application
 
   def start(_type, _args) do
-    children = [Docpipe.Watcher]
+    IO.puts("Starting application")
+    children = [
+      #Docpipe.Watcher,
+      Docpipe.Repo
+    ]
     opts = [strategy: :one_for_one, name: UserDocsWeb.Supervisor]
     Supervisor.start_link(children, opts)
   end
