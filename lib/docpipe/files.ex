@@ -52,6 +52,17 @@ defmodule Docpipe.Files do
     |> maybe_filter_by_extension(filters[:extensions])
   end
 
+  def maybe_filter_by_extension(files, nil), do: files
+  def maybe_filter_by_extension(files, extensions) do
+    Enum.filter(files, fn(file) ->
+      ext =
+        file
+        |> Path.basename()
+        |> Path.extname()
+        |> String.replace(".", "")
+
+      if ext in extensions, do: true, else: false
+    end)
   end
 
   def create(attrs) do
