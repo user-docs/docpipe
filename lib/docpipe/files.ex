@@ -20,18 +20,26 @@ defmodule Docpipe.Files do
     end
   end
 
-  def list_repo() do
+  def list_repo(opts) do
+    filters = Keyword.get(opts, :filters, [])
     from(file in File)
+    |> maybe_filter_completed_files(filters[:completed])
     |> Repo.all()
   end
 
-  def list_file_system(path) do
+  def maybe_filter_completed_files(files, nil), do: files
+  def maybe_filter_completed_files(files, _) do
+    from(file in files, where: file.complete == false or is_nil(file.complete))
+  end
+
+  def list_file_system(path, opts) do
+    filters = Keyword.get(opts, :filters, [])
     {:ok, files} = Elixir.File.ls(path)
 
     files
     |> Enum.reduce([], fn(file_name, acc) ->
       case Elixir.File.dir?(Path.join(@source_path, file_name)) do
-        true -> acc ++ list_file_system(Path.join(path, file_name))
+        true -> acc ++ list_file_system(Path.join(path, file_name), opts)
         false ->
           relative_path =
             path
@@ -41,6 +49,9 @@ defmodule Docpipe.Files do
           [ relative_path | acc]
       end
     end)
+    |> maybe_filter_by_extension(filters[:extensions])
+  end
+
   end
 
   def create(attrs) do
