@@ -4,11 +4,11 @@ defmodule Docpipe.Application do
   @moduledoc false
 
   use Application
+  require Logger
 
   def start(_type, _args) do
-    IO.puts("Starting application")
+    Logger.info("Starting #{__MODULE__}")
     children = [
-      #Docpipe.Watcher,
       Docpipe.Repo
     ]
     opts = [strategy: :one_for_one, name: UserDocsWeb.Supervisor]
