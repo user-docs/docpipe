@@ -15,8 +15,8 @@ defmodule Docpipe.Files do
 
   def list(opts \\ [source: :repo]) do
     case opts[:source] do
-      :repo -> list_repo()
-      :file_system -> list_file_system(@source_path)
+      :repo -> list_repo(opts)
+      :file_system -> list_file_system(@source_path, opts)
     end
   end
 
