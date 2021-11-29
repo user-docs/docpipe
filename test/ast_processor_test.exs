@@ -8,7 +8,7 @@ defmodule ASTProcessorTest do
     <title>Title text</title>
     """
     {:ok, ast} = Panpipe.ast(content, [from: :html])
-    ASTProcessor.apply(ast) |> IO.inspect()
+    ASTProcessor.apply(ast)
   end
 
 end
