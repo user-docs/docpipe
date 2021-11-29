@@ -11,3 +11,19 @@ defmodule Mix.Tasks.MakeFileIndex do
     |> Enum.map(&Files.create/1)
   end
 end
+
+defmodule Mix.Tasks.ReviewFiles do
+  @shortdoc "Iterates through the files in the index, allowing the user to specify destination file names and paths."
+  use Mix.Task
+  alias Docpipe.Files
+  alias Console.FilesConsole
+
+  @impl Mix.Task
+  def run(_args) do
+    Application.ensure_all_started(:docpipe)
+    Files.list([source: :repo, filters: [completed: true]])
+    |> Enum.each(fn(file) ->
+      :ok = FilesConsole.handle_user_input(file)
+    end)
+  end
+end
