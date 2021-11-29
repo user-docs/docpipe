@@ -71,11 +71,16 @@ defmodule Docpipe.Files do
     |> Repo.insert()
   end
 
+  def update(file, attrs) do
+    file
+    |> File.changeset(attrs)
+    |> Repo.update()
+  end
+
   def delete_all() do
     from(file in File)
     |> Repo.delete_all()
   end
-
 
   def cast_file_system(file) do
     %{
