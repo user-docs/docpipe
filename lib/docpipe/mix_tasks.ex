@@ -6,7 +6,7 @@ defmodule Mix.Tasks.MakeFileIndex do
   @impl Mix.Task
   def run(args) do
     Application.ensure_all_started(:docpipe)
-    Files.list([source: :file_system])
+    Files.list([source: :file_system, filters: [extensions: args]])
     |> Enum.map(&Files.cast_file_system/1)
     |> Enum.map(&Files.create/1)
   end
