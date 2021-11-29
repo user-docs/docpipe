@@ -2,7 +2,7 @@ defmodule Docpipe.Files.File do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @all_fields [:old_path, :old_file_name, :new_path, :new_file_name, :old_name, :new_name, :alias_type, :alias_id]
+  @all_fields [:old_path, :old_file_name, :new_path, :new_file_name, :old_name, :new_name, :alias_type, :alias_id, :complete]
 
   @derive Jason.Encoder
   schema "files" do
@@ -14,6 +14,7 @@ defmodule Docpipe.Files.File do
     field :new_name, :string
     field :alias_type, Ecto.Enum, values: [:local, :confluence]
     field :alias_id, :string
+    field :complete, :boolean
     timestamps()
   end
 

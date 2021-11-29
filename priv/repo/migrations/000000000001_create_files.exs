@@ -11,6 +11,7 @@ defmodule MyRepo.Migrations.AddFilesTable do
       add :new_name,        :string
       add :alias_type,      :string
       add :alias_id,        :string
+      add :complete,        :boolean
 
       timestamps()
     end
