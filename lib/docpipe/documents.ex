@@ -1,11 +1,11 @@
-defmodule Docpipe.Files do
+defmodule Docpipe.Documents do
   @moduledoc """
-  The Files context.
+  The Documents context.
   """
   import Ecto.Query, warn: false
   alias Docpipe.Repo
 
-  alias Docpipe.Files.File
+  alias Docpipe.Documents.Document
 
   if Mix.env() in [:test] do
     @source_path Path.join(:code.priv_dir(:docpipe), "test_input")
@@ -22,21 +22,21 @@ defmodule Docpipe.Files do
 
   def list_repo(opts) do
     filters = Keyword.get(opts, :filters, [])
-    from(file in File)
-    |> maybe_filter_completed_files(filters[:completed])
+    from(file in Document)
+    |> maybe_filter_completed_documents(filters[:completed])
     |> Repo.all()
   end
 
-  def maybe_filter_completed_files(files, nil), do: files
-  def maybe_filter_completed_files(files, _) do
-    from(file in files, where: file.complete == false or is_nil(file.complete))
+  def maybe_filter_completed_documents(documents, nil), do: documents
+  def maybe_filter_completed_documents(documents, _) do
+    from(file in documents, where: file.complete == false or is_nil(file.complete))
   end
 
   def list_file_system(path, opts) do
     filters = Keyword.get(opts, :filters, [])
-    {:ok, files} = Elixir.File.ls(path)
+    {:ok, documents} = Elixir.File.ls(path)
 
-    files
+    documents
     |> Enum.reduce([], fn(file_name, acc) ->
       case Elixir.File.dir?(Path.join(@source_path, file_name)) do
         true -> acc ++ list_file_system(Path.join(path, file_name), opts)
@@ -52,9 +52,9 @@ defmodule Docpipe.Files do
     |> maybe_filter_by_extension(filters[:extensions])
   end
 
-  def maybe_filter_by_extension(files, nil), do: files
-  def maybe_filter_by_extension(files, extensions) do
-    Enum.filter(files, fn(file) ->
+  def maybe_filter_by_extension(documents, nil), do: documents
+  def maybe_filter_by_extension(documents, extensions) do
+    Enum.filter(documents, fn(file) ->
       ext =
         file
         |> Path.basename()
@@ -66,19 +66,19 @@ defmodule Docpipe.Files do
   end
 
   def create(attrs) do
-    %File{}
-    |> File.changeset(attrs)
+    %Document{}
+    |> Document.changeset(attrs)
     |> Repo.insert()
   end
 
   def update(file, attrs) do
     file
-    |> File.changeset(attrs)
+    |> Document.changeset(attrs)
     |> Repo.update()
   end
 
   def delete_all() do
-    from(file in File)
+    from(file in Document)
     |> Repo.delete_all()
   end
 

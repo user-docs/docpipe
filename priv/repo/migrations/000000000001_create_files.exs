@@ -1,8 +1,8 @@
-defmodule MyRepo.Migrations.AddFilesTable do
+defmodule MyRepo.Migrations.AddDocumentsTable do
   use Ecto.Migration
 
   def change do
-    create table("files") do
+    create table("documents") do
       add :old_path,        :string
       add :old_file_name,   :string
       add :new_path,        :string
@@ -15,6 +15,6 @@ defmodule MyRepo.Migrations.AddFilesTable do
 
       timestamps()
     end
-    index("files", [:old_path, :old_file_name], unique: true, name: :unique_path)
+    index("documents", [:old_path, :old_file_name], unique: true, name: :unique_path)
   end
 end

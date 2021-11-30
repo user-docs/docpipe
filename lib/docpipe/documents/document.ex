@@ -1,11 +1,11 @@
-defmodule Docpipe.Files.File do
+defmodule Docpipe.Documents.Document do
   use Ecto.Schema
   import Ecto.Changeset
 
   @all_fields [:old_path, :old_file_name, :new_path, :new_file_name, :old_name, :new_name, :alias_type, :alias_id, :complete]
 
   @derive Jason.Encoder
-  schema "files" do
+  schema "documents" do
     field :old_path, :string
     field :old_file_name, :string
     field :new_path, :string
@@ -19,8 +19,8 @@ defmodule Docpipe.Files.File do
   end
 
   @doc false
-  def changeset(file, attrs) do
-    file
+  def changeset(document, attrs) do
+    document
     |> cast(attrs, @all_fields)
     |> unique_constraint([:old_path, :old_file_name], name: :unique_path)
   end

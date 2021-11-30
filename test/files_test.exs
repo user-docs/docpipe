@@ -1,6 +1,6 @@
-defmodule Docpipe.FilesTest do
+defmodule Docpipe.DocumentsTest do
   use ExUnit.Case
-  alias Docpipe.Files
+  alias Docpipe.Documents
 
   @path Path.join(:code.priv_dir(:docpipe), "test_input")
 
@@ -14,26 +14,26 @@ defmodule Docpipe.FilesTest do
     state
   end
 
-  defp create_local_files() do
-    File.touch(@path <> "/file1.html")
-    File.touch(@path <> "/file2.html")
-    File.touch(@path <> "/file3.pdf")
+  defp create_local_documents() do
+    File.touch(@path <> "/document1.html")
+    File.touch(@path <> "/document2.html")
+    File.touch(@path <> "/document3.pdf")
     File.mkdir(@path <> "/test_dir")
-    File.touch(@path <> "/test_dir/file3.html")
-    File.touch(@path <> "/test_dir/file4.html")
+    File.touch(@path <> "/test_dir/document3.html")
+    File.touch(@path <> "/test_dir/document4.html")
   end
 
-  defp delete_local_files() do
-    File.rm(@path <> "/file1.html")
-    File.rm(@path <> "/file2.html")
-    File.touch(@path <> "/file3.pdf")
-    File.mkdir(@path <> "/test_dir/file3.html")
-    File.mkdir(@path <> "/test_dir/file4.html")
+  defp delete_local_documents() do
+    File.rm(@path <> "/document1.html")
+    File.rm(@path <> "/document2.html")
+    File.touch(@path <> "/document3.pdf")
+    File.mkdir(@path <> "/test_dir/document3.html")
+    File.mkdir(@path <> "/test_dir/document4.html")
     File.rmdir(@path <> "/test_dir")
   end
 
-  describe "files" do
-    alias Docpipe.Files.File
+  describe "documents" do
+    alias Docpipe.Documents.Files
 
     setup [
       :create_dirs
@@ -45,7 +45,7 @@ defmodule Docpipe.FilesTest do
       old_name: "old name",
       new_name: "new name",
       alias_type: "local",
-      alias_id: "file.ext"
+      alias_id: "document.ext"
     }
     @update_attrs %{
       old_path: "/some/updated/path/",
@@ -53,43 +53,43 @@ defmodule Docpipe.FilesTest do
       old_name: "old name",
       new_name: "updated name",
       alias_type: "local",
-      alias_id: "file.ext"
+      alias_id: "document.ext"
     }
     @invalid_attrs %{base_url: nil, name: nil}
 
-    def file_fixture(attrs \\ %{}) do
-      {:ok, file} =
+    def document_fixture(attrs \\ %{}) do
+      {:ok, document} =
         attrs
         |> Enum.into(@valid_attrs)
-        |> Files.create()
+        |> Documents.create()
 
-      file
+      document
     end
 
-    test "list/0 returns all files" do
-      file = file_fixture()
-      assert Files.list() == [file]
-      Files.delete_all()
+    test "list/0 returns all documents" do
+      document = document_fixture()
+      assert Documents.list() == [document]
+      Documents.delete_all()
     end
 
-    test "list/1 returns all files" do
-      create_local_files()
-      files = Files.list([source: :file_system])
-      assert files == ["file3.pdf", "file2.html", "file1.html", "test_dir/file4.html", "test_dir/file3.html"]
+    test "list/1 returns all documents" do
+      create_local_documents()
+      documents = Documents.list([source: :file_system])
+      assert documents == ["document3.pdf", "document2.html", "document1.html", "test_dir/document4.html", "test_dir/document3.html"]
     end
 
-    test "list/1 with filter opts returns files with the specified extension" do
-      create_local_files()
-      files = Files.list([source: :file_system, filters: [extensions: ["html"]]])
-      assert files == ["file2.html", "file1.html", "test_dir/file4.html", "test_dir/file3.html"]
+    test "list/1 with filter opts returns documents with the specified extension" do
+      create_local_documents()
+      documents = Documents.list([source: :file_system, filters: [extensions: ["html"]]])
+      assert documents == ["document2.html", "document1.html", "test_dir/document4.html", "test_dir/document3.html"]
     end
 
-    test "cast_file_system/1 returns a file struct" do
+    test "cast_file_system/1 returns a document struct" do
       result = %{
-        old_file_name: "file_4.html",
+        old_file_name: "document_4.html",
         old_path: "/test_dir"
       }
-      assert Files.cast_file_system("/test_dir/file_4.html") == result
+      assert Documents.cast_file_system("/test_dir/document_4.html") == result
     end
   end
 end

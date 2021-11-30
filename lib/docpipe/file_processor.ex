@@ -1,4 +1,4 @@
-defmodule Docpipe.FileProcessor do
+defmodule Docpipe.DocumentProcessor do
   alias Docpipe.PlaintextRules
   alias Docpipe.ASTProcessor
 
